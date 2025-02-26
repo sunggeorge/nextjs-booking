@@ -1,5 +1,6 @@
 import './globals.css';
 import type { Metadata } from 'next';
+import UserProvider from './components/providers/UserProviders';
 import { Poppins } from 'next/font/google';
 import Header from './components/layout/Header';
 import Footer from './components/layout/Footer';
@@ -33,10 +34,13 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
   return (
     <html lang="en" data-theme="light">
       <body className={`${poppins.className} flex flex-col bg-gray-100`}>
-        <Notifications />
-        <Header user={user} userDetails={userDetails} />
-        <main className="main flex flex-grow">{children}</main>
-        <Footer />
+        <UserProvider user={user} userDetails={userDetails}>
+          <Notifications />
+          <Header />
+          {/* <Header user={user} userDetails={userDetails} /> */}
+          <main className="main flex flex-grow">{children}</main>
+          <Footer />
+        </UserProvider>
       </body>
     </html>
   );

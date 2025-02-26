@@ -49,6 +49,14 @@ export const cleaningReducer = (state: CleaningState, action: Action) => {
         };
       }
 
+    case 'skipMapStep':
+      if (state.step === 2) {
+        return {
+          ...state,
+          step: state.step + 2,
+        };
+      }
+
       return {
         ...state,
       };

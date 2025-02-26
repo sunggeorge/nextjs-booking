@@ -3,22 +3,33 @@
 import React, { useState, useTransition } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { LuUserCircle2 } from 'react-icons/lu';
+import { LuCircleUser } from 'react-icons/lu';
 import { useCallback } from 'react';
 import { logout } from '@/app/lib/utils/authUtils';
 import Loading from '@/app/components/misc/Loading';
 import { MdMenu } from 'react-icons/md';
 import { MdClose } from 'react-icons/md';
+import { useUser } from '@/app/context/UserContext';
+import { UserRoles } from '@/app/lib/constants/role';
 
-interface HeaderProps {
-  user: Record<string, any> | null;
-  userDetails: Record<string, any> | null;
-}
+// interface HeaderProps {
+//   user: Record<string, any> | null;
+//   userDetails: Record<string, any> | null;
+// }
 
-const Header: React.FC<HeaderProps> = ({ user, userDetails }) => {
+const Header: React.FC = () => {
+  // const Header: React.FC<HeaderProps> = ({ user, userDetails }) => {
+
+  const context = useUser();
+  const { user, userDetails } = context;
+  console.log('userDetails:', userDetails);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState<boolean>(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState<boolean>(false);
   const [isPending, startTransition] = useTransition();
+
+  const isCustomer = userDetails?.role === UserRoles.customer;
+  const isStaff = userDetails?.role === UserRoles.staff;
+  const isManager = userDetails?.role === UserRoles.manager;
 
   const onLogout = useCallback(async () => {
     startTransition(async () => {
@@ -75,14 +86,28 @@ const Header: React.FC<HeaderProps> = ({ user, userDetails }) => {
                 tabIndex={0}
                 className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
               >
-                <li>
-                  <Link className="menu-link text-white hover:text-primary focus:text-primary" href="/about">
-                    About Us
-                  </Link>
-                </li>
+                {user && (
+                  <li>
+                    <Link className="menu-link text-white hover:text-primary focus:text-primary" href="/bookings">
+                      Bookings
+                    </Link>
+                  </li>
+                )}
                 <li>
                   <Link className="menu-link text-white hover:text-primary focus:text-primary" href="/services">
                     Services
+                  </Link>
+                </li>
+                {isManager && (
+                  <li>
+                    <Link className="menu-link text-white hover:text-primary focus:text-primary" href="/report">
+                      Report
+                    </Link>
+                  </li>
+                )}
+                <li>
+                  <Link className="menu-link text-white hover:text-primary focus:text-primary" href="/about">
+                    About Us
                   </Link>
                 </li>
               </ul>
@@ -97,14 +122,28 @@ const Header: React.FC<HeaderProps> = ({ user, userDetails }) => {
             <Image className="dark:invert" src="/images/logo.svg" alt="Logo" width={35} height={35} priority />
           </Link>
           <ul className="menu menu-horizontal px-1 text-white hidden lg:flex">
-            <li>
-              <Link className="text-white hover:text-primary focus:text-primary" href="/about">
-                About Us
-              </Link>
-            </li>
+            {user && (
+              <li>
+                <Link className="text-white hover:text-primary focus:text-primary" href="/bookings">
+                  Bookings
+                </Link>
+              </li>
+            )}
             <li>
               <Link className="text-white hover:text-primary focus:text-primary" href="/services">
                 Services
+              </Link>
+            </li>
+            {isManager && (
+              <li>
+                <Link className="text-white hover:text-primary focus:text-primary" href="/report">
+                  Report
+                </Link>
+              </li>
+            )}
+            <li>
+              <Link className="text-white hover:text-primary focus:text-primary" href="/about">
+                About Us
               </Link>
             </li>
           </ul>
@@ -124,10 +163,10 @@ const Header: React.FC<HeaderProps> = ({ user, userDetails }) => {
                     {userDetails.imageUrl && (
                       <Image width={100} height={100} src={userDetails?.imageUrl} alt="User avatar" />
                     )}
-                    {!userDetails.imageUrl && <LuUserCircle2 className="w-6 h-6 text-base-100" />}
+                    {!userDetails.imageUrl && <LuCircleUser className="w-6 h-6 text-base-100" />}
                   </div>
                 )}
-                {!userDetails && <LuUserCircle2 />}
+                {!userDetails && <LuCircleUser />}
               </div>
               {isUserMenuOpen && (
                 <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-white rounded-box w-52">

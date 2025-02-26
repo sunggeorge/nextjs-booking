@@ -52,14 +52,14 @@ const CleaningModal: React.FC<CleaningModalProps> = ({ person, user, onClose = (
   const isDisabledNextButton = useMemo(() => {
     return (
       state.totalPrice === 0 ||
-      (state.location.value === '' && state.step === 3) ||
+      // (state.location.value === '' && state.step === 3) ||
       state.proceedCheckout ||
       ((!state.isPaymentInformationComplete || !state.isPaymentEmailAddressComplete) && state.step === 4)
     );
   }, [
     state.isPaymentEmailAddressComplete,
     state.isPaymentInformationComplete,
-    state.location.value,
+    // state.location.value,
     state.proceedCheckout,
     state.step,
     state.totalPrice,
@@ -77,7 +77,11 @@ const CleaningModal: React.FC<CleaningModalProps> = ({ person, user, onClose = (
 
   const onClickNextButton = () => {
     if (state.step < 4) {
-      dispatch({ type: 'incrementStep' });
+      if (state.step === 2) {
+        dispatch({ type: 'skipMapStep' });
+      } else {
+        dispatch({ type: 'incrementStep' });
+      }
     } else {
       dispatch({ type: 'setProceedCheckout', payload: true });
     }

@@ -35,7 +35,7 @@ const ServiceDetailsActionButtons: React.FC<ServiceDetailsActionButtonsProps> = 
         router.push('/login');
         return;
       }
-
+      console.log('Book Now:', person);
       setActiveModal(person.category.title);
     },
     [person.category.title, router, user],

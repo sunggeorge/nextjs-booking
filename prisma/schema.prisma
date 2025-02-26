@@ -5,7 +5,9 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")  
+  // url      = env("DATABASE_URL")
 }
 
 model category {
@@ -58,6 +60,7 @@ model user {
   imageUrl   String?
   email      String?
   uuid       String?  @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  role       String   @default("C")
   review     review[]
 }
 

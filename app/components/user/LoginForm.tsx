@@ -45,15 +45,17 @@ const LoginForm: React.FC<LoginFormProps> = ({ referer }) => {
   };
 
   const submitForm: SubmitHandler<Inputs> = (data) => {
+    console.log('isPending', isPending);
     if (isPending) return;
 
     startTransition(async () => {
       toast.remove();
       let response = (await login(data, referer ?? '/')) as any;
+      console.log('response', response);
       response = JSON.parse(response);
 
       if (response.error) {
-        toast.error(response.error.message, { duration: Infinity });
+        toast.error(response.error.code, { duration: Infinity });
       }
     });
   };
